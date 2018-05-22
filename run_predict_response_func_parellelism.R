@@ -18,12 +18,21 @@ run_predict_response <- function (loop_storeID = NULL,
   ## Start looping
   start_time <- Sys.time()
   
+  ## create log
+  filename_out <- file.path(paste("./../../", 
+                                  "/log/run_predict_response_pickup_", 
+                                  Sys.Date(), ".log", sep = ""))
+  
+  writeLines(text = c(""), con = filename_out)
+  
   ## Run foreach function
   predict_turnover_all <- foreach::foreach(x = loop_storeID,
                                            .combine = 'rbind',
                                            .packages = 'magrittr'
                                            # .packages = c('magrittr', 'grDevices')
                                            ) %dopar% {
+    
+    sink(file = filename_out, append=TRUE)
                                              
      predict_response(data = data,
                       response_type = response_type,
